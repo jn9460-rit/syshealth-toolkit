@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # ==============================================
 # syshealth.sh - System Health & Log Analysis Toolkit
-# Lab 3 - Refactoring into Functions
+# Lab 4 - Log Analysis Integration
 # Author: Jack Ni
 # Date: $(date +%Y-%m-%d)
 # ==============================================
@@ -191,4 +191,4 @@ main() {
 }
 
 # The single call that starts everything - must be the very last line
-main
+main "$@"

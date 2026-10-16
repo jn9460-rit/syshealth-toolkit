@@ -1,0 +1,17 @@
+=========================================
+System Health Report - 2026-10-16 18:15:20
+Hostname            : rockylinux.jn9460.com
+Uptime              : up 53 minutes
+Disk /              : /dev/mapper/rl-root   25G  6.6G   19G  27% /
+Memory used         : 1.9Gi/3.5Gi
+Total processes     : 395
+Health status       : HEALTHY
+=========================================
+
+=======================================
+LOG ANALYSIS SUMMARY
+======================================
+
+Log Analysis Summary (messages):
+  Log file not readable or does not exist on this system.
+  (This is normal in some containers or minimal installs.)
