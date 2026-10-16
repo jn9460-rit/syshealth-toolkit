@@ -1,15 +1,17 @@
 #!/usr/bin/env bash
 # ==============================================
 # syshealth.sh - System Health & Log Analysis Toolkit
-# Lab 1 - Data Collector
+# Lab 3 - Refactoring into Functions
 # Author: Jack Ni
 # Date: $(date +%Y-%m-%d)
 # ==============================================
 
-# --- Thresholds (change these values to test alert behavior) ---
+# --- Thresholds (global, used by multiple functions) ---
 CPU_THRESHOLD=75
 MEM_THRESHOLD=85
 DISK_THRESHOLD=85
+
+#--- Function definitions will go here (print_status, check_*, run_*, parse_*, generate_*) ---
 
 print_status() {
 	local status="$1"
@@ -20,6 +22,37 @@ print_status() {
 		echo -e "\e[31m ALERT: $message\e[0m"
 	fi
 }
+
+check_disk_usage() {
+	local mount="$1"
+	local pct threshold
+	threshold="$DISK_THRESHOLD"
+
+	if ! mountpoint -q "$mount" 2>/dev/null && [ "$mount" != "/" ]; then
+		print_status "OK" "Mount point $mount does not exist on this system"
+		return 0
+	fi
+
+	pct=$(df "$mount" | tail -1 | awk '{gsub("%",""); print $5}')
+
+	if (( pct > threshold )); then
+		print_status "ALERT" "Disk usage on $mount is ${pct}% (threshold ${threshold}%)"
+		return 1
+	else
+		print_status "OK" "Disk usage on $mount is ${pct}%"
+		return 0
+	fi
+}
+
+main() {
+	#This will be the ONLY code that runs at the top level
+	parse_arguments "$@"
+	run_health_checks
+	generate_report
+}
+
+# The single call that starts everything - must be the very last line
+main
 
 # --- Variables and quoting demonstration ---
 HOSTNAME=$(hostname)
