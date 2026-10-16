@@ -126,13 +126,13 @@ generate_report() {
 
 	# --- NEW: Log Analysis Summary (integrated into every report) ---
 	printf "\n=======================================\n"
-	printf "LOG ANALYSIS SUMMARY\N"
+	printf "LOG ANALYSIS SUMMARY\n"
 	printf "======================================\n"
 	analyze_logs	# uses default /var/Log/messages
 }
 
 analyze_logs() {
-	local log_file="${1:-/var/log/messages}" # default to Rocky Linux 9 main log
+	local log_file="${1:-/var/log/secure}" # default to Rocky Linux 9 main log
 	local errors=0
 	local warnings=0
 	local failed_logins=0
