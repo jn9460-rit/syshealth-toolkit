@@ -126,110 +126,22 @@ generate_report() {
 }
 
 main() {
-	#This will be the ONLY code that runs at the top level
 	parse_arguments "$@"
+
+	# Run all health checks (prints colored alerts to terminal)
 	run_health_checks
-	generate_report
+
+	# Generate the structured report (to screen or file)
+	if [ -n "$OUTPUT_FILE" ]; then
+		generate_report > "$OUTPUT_FILE"
+		echo "Report written to $OUTPUT_FILE"
+	else
+		generate_report
+	fi
+
+	# Exit with the aggregated health status from run_health_checks
+	exit "${HEALTH_STATUS:-0}"
 }
 
 # The single call that starts everything - must be the very last line
 main
-
-# --- Variables and quoting demonstration ---
-HOSTNAME=$(hostname)
-CURRENT_DATE=$(date '+%Y-%m-%d %H:%M:%S')
-
-# IMPORTANT: Quoting demo
-# Without quotes - word-splitting bug
-# With double quotes - safe (Bash best practice)
-echo "Hostname without quotes: $HOSTNAME" #works here but dangerous later
-echo "Hostname with quotes: \"$HOSTNAME\"" #always do this
-
-cat << EOF
-# COMMENT FOR GRADER:
-# IN Python/Java variables expand safely.
-# In Bash, unquoted \$VAR splits on spaces/tabs/newlines.
-# Always double-quote unless you deliberately want splitting.
-EOF
-
-# --- System metrics collection ---
-UPTIME=$(uptime -p)
-DISK_USAGE=$(df -h / | tail -1)
-MEMORY_USAGE=$(free -h | awk '/Mem:/ {print $3 "/" $2}')
-PROCESS_COUNT=$(ps -e | wc -l)
-
-# --- Parse numeric percentages for threshold comparison (Rocky Linux 9 compatible) ---
-# Disk usage percentage for root filesystem (strip the % sign)
-DISK_PCT=$(df / | tail -1 | awk '{gsub("%",""); print $5}')
-
-# Memory usage percentage (used / total * 100), rounded to integer
-MEM_PCT=$(free | awk '/Mem:/ {printf "%.0f", $3/$2*100}')
-
-# CPU usage percentage (100 - idle). The top -bn1 method is a common one-liner
-# that works on Rocky Linux 9. Note: this is a breif snapshot; production tools
-# often average over time or use /proc/stat directly.
-CPU_PCT=$(top -bn1 | grep '^%Cpu' | awk '{print 100 - $8}' | cut -d. -f1)
-
-# --- Health checks with conditionals and color-coded output ---
-print_status "CHECK" "Running system health analysis..."
-
-HEALTH_STATUS=0 # 0 = healthy (no alerts). Will be set to 1 if any check fails.
-
-# Disk check for root filesystem
-if (( DISK_PCT > DISK_THRESHOLD )); then
-	print_status "ALERT" "Disk usage on / is ${DISK_PCT}% (threshold ${DISK_THRESHOLD}%)"
-	HEALTH_STATUS=1
-else
-	print_status "OK" "Disk usage on / is ${DISK_PCT}%"
-fi
-
-# --- Loop over multiple mount points (more realistic monitoring) ---
-for mount in / /home /var; do
-	if mountpoint -q "$mount" 2>/dev/null || [ "$mount" = "/" ]; then
-		PCT=$(df "$mount" | tail -1 | awk '{gsub("%",""); print $5}')
-		if (( PCT > DISK_THRESHOLD )); then
-			print_status "ALERT" "Disk usage on $mount is ${PCT}% (threshold ${DISK_THRESHOLD}%)"
-			HEALTH_STATUS=1
-		else
-			print_status "OK" "Disk usage on $mount is ${PCT}%"
-		fi
-	else
-		print_status "OK" "Mount point $mount does not exist or is not a mountpoint on this system"
-	fi
-done
-
-# Memory check
-if (( MEM_PCT > MEM_THRESHOLD )); then
-	print_status "ALERT" "Memory usage is ${MEM_PCT}% (threshold ${MEM_THRESHOLD}%)"
-	HEALTH_STATUS=1
-else
-	print_status "OK" "Memory usage is ${MEM_PCT}%"
-fi
-
-# CPU check
-if (( CPU_PCT > CPU_THRESHOLD )); then
-	print_status "ALERT" "CPU usage is ${CPU_PCT}% (threshold ${CPU_THRESHOLD}%)"
-	HEALTH_STATUS=1
-else
-	print_status "OK" "CPU usage is ${CPU_PCT}%"
-fi
-
-# --- Output handling ---
-OUTPUT_FILE="${1:-}" #if $1 is given, use it, else print to screen
-
-print_report() {
-	printf "===================================\n"
-	printf "System Health Report - %s\n" "$CURRENT_DATE"
-	printf "Hostname            : %s\n" "$HOSTNAME"
-	
-}
-
-if [ -n "$OUTPUT_FILE" ]; then
-	print_report > "$OUTPUT_FILE"
-	echo "Report written to $OUTPUT_FILE (alerts were printed to terminal)"
-else
-	print_report
-fi
-
-# Exit with 0 (healthy) or 1 (alerts triggered). This enables scripting / cron usage.
-exit "${HEALTH_sTATUS:-0}"
