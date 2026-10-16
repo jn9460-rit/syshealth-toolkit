@@ -47,7 +47,7 @@ check_disk_usage() {
 check_memory_usage() {
 	local pct threshold
 	threshold="$MEM_THRESHOLD"
-	pct=$(free | awk '/Mem:/ {printf "$.0f", $3/$2*100}')
+	pct=$(free | awk '/Mem:/ {printf "%.0f", $3/$2*100}')
 
 	if (( pct > threshold )); then
 		print_status "ALERT" "Memory usage is ${pct}% (threshold ${threshold}%)"
@@ -107,7 +107,7 @@ generate_report() {
 	# Re-collect the human-readable metrics (same as Lab 1)
 	local CURRENT_DATE HOSTNAME UPTIME DISK_USAGE MEMORY_USAGE PROCESS_COUNT
 
-	CURRENT_DATE=%(date '+%Y-%m-%d %H:%M:%S')
+	CURRENT_DATE=$(date '+%Y-%m-%d %H:%M:%S')
 	HOSTNAME=$(hostname)
 	UPTIME=$(uptime -p)
 	DISK_USAGE=$(df -h / | tail -1)
