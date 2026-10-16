@@ -1,0 +1,12 @@
+* b4686c9 (HEAD -> main, origin/main, origin/HEAD) Fixed few syntax errors
+* 73d25d6 finished main function and removed old code
+* fd7da88 created function generate_report
+* 7bcc9c9 added parse_arguments function (incomplete, to be worked on in lab 6)
+* 26b4269 added run_health_checks function
+* 071c501 added check_cpu_usage function
+* c261d18 added check_memory_usage function
+* f81171f added main function and check_disk_usage function
+* 169f392 Starting script assingment 3. Backed up syshealth.sh
+* c2db84f Rename script2_syshealth.txt to syshealth.sh
+* 43b4c53 Add files via upload
+* 7812f39 Initial commit: project skeleton and README
