@@ -1,0 +1,19 @@
+* aa1aa3e (HEAD -> main, origin/main, origin/HEAD) fixed main() not taking in arguments
+* c933712 Added graceful missing-log handling and update documentation
+* 255e414 Implemented sed + sort|uniq|head pipeline for top 5 recurring issues
+* 9693dee Integrated log analysis summary into generate_report()
+* 5c630c8 Add analyze_logs function with grep -E regex and counts
+* 9511bf2 backed up syshealth.sh for lab 4
+* b7f16d3 lab finished
+* b4686c9 Fixed few syntax errors
+* 73d25d6 finished main function and removed old code
+* fd7da88 created function generate_report
+* 7bcc9c9 added parse_arguments function (incomplete, to be worked on in lab 6)
+* 26b4269 added run_health_checks function
+* 071c501 added check_cpu_usage function
+* c261d18 added check_memory_usage function
+* f81171f added main function and check_disk_usage function
+* 169f392 Starting script assingment 3. Backed up syshealth.sh
+* c2db84f Rename script2_syshealth.txt to syshealth.sh
+* 43b4c53 Add files via upload
+* 7812f39 Initial commit: project skeleton and README
