@@ -58,6 +58,20 @@ check_memory_usage() {
 	fi
 }
 
+check_cpu_usage() {
+	local pct threshold
+	threshold="$CPU_THRESHOLD"
+	pct=$(top -bn1 | grep '^%Cpu' | awk '{print 100 - $8}' | cut -d. -f1)
+
+	if (( pct > threshold )); then
+		print_status "ALERT" "CPU usage is ${pct}% (threshold ${threshold}%)"
+		return 1
+	else
+		print_status "OK" "CPU usage is ${pct}%"
+		return 0
+	fi
+}
+
 main() {
 	#This will be the ONLY code that runs at the top level
 	parse_arguments "$@"
