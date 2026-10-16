@@ -44,6 +44,20 @@ check_disk_usage() {
 	fi
 }
 
+check_memory_usage() {
+	local pct threshold
+	threshold="$MEM_THRESHOLD"
+	pct=$(free | awk '/Mem:/ {printf "$.0f", $3/$2*100}')
+
+	if (( pct > threshold )); then
+		print_status "ALERT" "Memory usage is ${pct}% (threshold ${threshold}%)"
+		return 1
+	else
+		print_status "OK" "Memory usage is ${pct}%"
+		return 0
+	fi
+}
+
 main() {
 	#This will be the ONLY code that runs at the top level
 	parse_arguments "$@"
