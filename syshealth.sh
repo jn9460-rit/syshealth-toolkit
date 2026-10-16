@@ -132,7 +132,7 @@ generate_report() {
 }
 
 analyze_logs() {
-	local log_file="${1:-/var/log/secure}" # default to Rocky Linux 9 main log
+	local log_file="${1:-/var/log/messages}" # default to Rocky Linux 9 main log
 	local errors=0
 	local warnings=0
 	local failed_logins=0
@@ -183,6 +183,11 @@ main() {
 
 	# Exit with the aggregated health status from run_health_checks
 	exit "${HEALTH_STATUS:-0}"
+
+#	if [ "$1" = "--test-logs" ]; then
+#		analyze_logs "/var/log/secure"
+#		exit 0
+#	fi
 }
 
 # The single call that starts everything - must be the very last line
