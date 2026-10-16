@@ -99,6 +99,10 @@ run_health_checks() {
 	return "$overall_status"
 }
 
+parse_arguments() {
+	OUTPUT_FILE="${1:-}" # if 1 is given, use it as output file; otherwise empty
+}
+
 main() {
 	#This will be the ONLY code that runs at the top level
 	parse_arguments "$@"
