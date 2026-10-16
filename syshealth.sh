@@ -122,7 +122,13 @@ generate_report() {
 	printf "Memory used         : %s\n" "$MEMORY_USAGE"
 	printf "Total processes     : %s\n" "$PROCESS_COUNT"
 	printf "Health status       : %s\n" "$([ "$HEALTH_STATUS" -eq 0 ] && echo "HEALTHY" || echo "UNHEALTHY - see alerts above")"
-	printf "===================================\n"
+	printf "=========================================\n"
+
+	# --- NEW: Log Analysis Summary (integrated into every report) ---
+	printf "\n=======================================\n"
+	printf "LOG ANALYSIS SUMMARY\N"
+	printf "======================================\n"
+	analyze_logs	# uses default /var/Log/messages
 }
 
 analyze_logs() {
