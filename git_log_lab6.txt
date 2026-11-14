@@ -1,0 +1,20 @@
+* b9a6771 (HEAD -> main, origin/main, origin/HEAD) tested arguments and backwards compatability
+* 69aaaaa Updated main() for full CLI integration, added cron.txt
+* 08d7153 Added run_mode function using case/esac for CLI mode dispatching
+* cc83030 Implemented robust getopts with short and long option support in parse_arguments
+* 3fd8c01 Added usage() and version() functions with here-document help
+* acd11f8 backed up syshealth.sh. starting script assignment 6
+* b179c55 script assignment 5 complete
+* f287552 fixed final log_message call in generate_report
+* d81f1cf fixed some syntax errors crashing the program
+* 0f1f87b Rewrote generate_report with here-document footer and add logg ing calls
+* e091e35 Added array (local -a) for report_metrics and populate in genera te_report
+* 611708f Implemented log_message function with timestamped append to ~/.s yshealth.log. Old log_message function removed (was broken and written in main for some reason
+* f41f790 Added strict mode set -euo pipefail and trap handlers for ERR/EX IT
+* 5d52e92 backed up syshealth.sh. Starting script assingment 5
+* d7c0a95 Lab 4 complete
+* aa1aa3e fixed main() not taking in arguments
+* c933712 Added graceful missing-log handling and update documentation
+* 255e414 Implemented sed + sort|uniq|head pipeline for top 5 recurring issues
+* 9693dee Integrated log analysis summary into generate_report()
+* 5c630c8 Add analyze_logs function with grep -E regex and counts
