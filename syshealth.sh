@@ -242,21 +242,52 @@ parse_arguments() {
 
 	while getopts ":marhv-:" opt; do
 		case "$opt" in
-			m) MODE="monitor" ;;
-			a) MODE="analyze" ;;
-			r) MODE="report" ;;
-			h) usage ;;
-			i) version ;;
+			m)
+				MODE="monitor"
+				;;
+			a)
+				MODE="analyze"
+				;;
+			r)
+				MODE="report"
+				;;
+			h)
+				usage
+				;;
+			i)
+				version
+				;;
 			-) # Long options
 				case "${OPTARG}" in
-					monitor) MODE="monitor";;
-					analyze) MODE="analyze";;
-					report) MODE="report";;
-					help) usage ;;
-					version) version ;;
-					*) echo "Unknown long option: --${OPTARG}" >&2; usage ;; esac ;;
-					\?) echo "Invalid option: -$OPTARG" >&2; usage ;;
-					:) echo "Option -$OPTARG requires an argument." >&2; usage ;; esac
+					monitor)
+						MODE="monitor"
+						;;
+					analyze)
+						MODE="analyze"
+						;;
+					report)
+						MODE="report"
+						;;
+					help)
+						usage
+						;;
+					version)
+						version
+						;;
+					*)
+						echo "Unknown long option: --${OPTARG}" >&2; 
+						usage
+						;;
+					\?)
+						echo "Invalid option: -$OPTARG" >&2;
+						usage
+						;;
+					:)
+						echo "Option -$OPTARG requires an argument." >&2;
+						usage 
+						;; 
+				esac
+		esac
 	done
 
 	# Handle any remaining positional argument (backward compatibility for output file)
@@ -267,6 +298,37 @@ parse_arguments() {
 
 	# Default mode if none specified
 	MODE="${MODE:-report}"
+}
+
+run_mode() {
+	case "${MODE:-report}" in
+		monitor)
+			log_message "INFO" "Running in MONITOR mode"
+			print_status "CHECK" "Running health checksonly..."
+			run_health_checks
+			;;
+		analyze)
+			log_message "INFO" "Running in ANALYZE mode"
+			printf "========================================\n"
+			printf "LOG ANALYSIS ONLY\n"
+			printf "========================================\n"
+			analyze_logs
+			;;
+		report)
+			log_message "INFO" "Running in REPORT mode (full)"
+			run_health_checks || true
+			if [ -n "$OUTPUT_FILE" ]; then
+				generate_report > "$OUTPUT_FILE"
+				echo "Full report written to $OUTPUT_FILE"
+			else
+				generate_report
+			fi
+			;;
+		*)
+			echo "Unknown mode: $MODE" >&2
+			usage
+			;;
+	esac
 }
 
 main() {
@@ -281,9 +343,6 @@ main() {
 		echo "Report written to $OUTPUT_FILE"
 		log_message "INFO" "Report written to $OUTPUT_FILE"
 	else
-git commit -m "Rewrite generate_report with here-document footer and add logg
-ing calls"git commit -m "Rewrite generate_report with here-document footer and add logg
-ing calls"		generate_report
 	fi
 	exit "${HEALTH_STATUS:-0}"
 }
