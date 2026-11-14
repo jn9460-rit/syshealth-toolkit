@@ -1,0 +1,20 @@
+* f287552 (HEAD -> main, origin/main, origin/HEAD) fixed final log_message call in generate_report
+* d81f1cf fixed some syntax errors crashing the program
+* 0f1f87b Rewrote generate_report with here-document footer and add logg ing calls
+* e091e35 Added array (local -a) for report_metrics and populate in genera te_report
+* 611708f Implemented log_message function with timestamped append to ~/.s yshealth.log. Old log_message function removed (was broken and written in main for some reason
+* f41f790 Added strict mode set -euo pipefail and trap handlers for ERR/EX IT
+* 5d52e92 backed up syshealth.sh. Starting script assingment 5
+* d7c0a95 Lab 4 complete
+* aa1aa3e fixed main() not taking in arguments
+* c933712 Added graceful missing-log handling and update documentation
+* 255e414 Implemented sed + sort|uniq|head pipeline for top 5 recurring issues
+* 9693dee Integrated log analysis summary into generate_report()
+* 5c630c8 Add analyze_logs function with grep -E regex and counts
+* 9511bf2 backed up syshealth.sh for lab 4
+* b7f16d3 lab finished
+* b4686c9 Fixed few syntax errors
+* 73d25d6 finished main function and removed old code
+* fd7da88 created function generate_report
+* 7bcc9c9 added parse_arguments function (incomplete, to be worked on in lab 6)
+* 26b4269 added run_health_checks function
