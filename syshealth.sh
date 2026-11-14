@@ -172,6 +172,18 @@ analyze_logs() {
 	printf "  Failed logins : %d\n" "$failed_logins"
 }
 
+log_message() {
+	local level="$1"
+	local message="$2"
+	local log_file="$HOME/.syshealth.log"
+	local timestamp
+	timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+	
+	# Ensure log directory exists (in case $HOME is unusual)
+	mkdir -p "$(dirname "$log_file")"
+	echo "$timestamp [$level] $message" >> "$log_file"
+}
+
 main() {
 	parse_arguments "$@"
 
@@ -182,17 +194,6 @@ main() {
 	if [ -n "$OUTPUT_FILE" ]; then
 		generate_report > "$OUTPUT_FILE"
 		echo "Report written to $OUTPUT_FILE"
-	else
-		generate_report
-	fi
-
-	# Exit with the aggregated health status from run_health_checks
-	exit "${HEALTH_STATUS:-0}"
-
-#	if [ "$1" = "--test-logs" ]; then
-#		analyze_logs "/var/log/secure"
-#		exit 0
-#	fi
 }
 
 # The single call that starts everything - must be the very last line
