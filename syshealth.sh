@@ -226,13 +226,17 @@ Examples:
 	$(basename "$0") --report daily_$(date +%F).txt
 	$(basename "$0") -a /var/log/secure
 
-Report bugs to your instructor. EOF
+Report bugs to your instructor.
+
+EOF
 
 exit 0
 }
 
 version() {
-	echo "syshealth.sh version 1.0 (NSSA221 Scripting Series - Capstone)" echo "Built as final project - $(date '+%Y')" echo "Features: Health checks, log analysis, strict mode, persistent logging, CLI modes"
+	echo "syshealth.sh version 1.0 (NSSA221 Scripting Series - Capstone)"
+	echo "Built as final project - $(date '+%Y')"
+	echo "Features: Health checks, log analysis, strict mode, persistent logging, CLI modes"
 exit 0
 }
 
@@ -256,7 +260,7 @@ parse_arguments() {
 			h)
 				usage
 				;;
-			i)
+			v)
 				version
 				;;
 			-) # Long options
@@ -319,7 +323,7 @@ run_mode() {
 		report)
 			log_message "INFO" "Running in REPORT mode (full)"
 			run_health_checks || true
-			if [ -n "$OUTPUT_FILE" ]; then
+			if [ -n "${OUTPUT_FILE:-}" ]; then
 				generate_report > "$OUTPUT_FILE"
 				echo "Full report written to $OUTPUT_FILE"
 			else
@@ -339,7 +343,7 @@ main() {
 	run_mode
 
 	# For monitor/analyze modes that don't already exit inside generate_report
-	if [ "${MODE:-report]" != "report" ]; then
+	if [ "${MODE:-report}" != "report" ]; then
 		exit "${HEALTH_STATUS:-0}"
 	fi
 }

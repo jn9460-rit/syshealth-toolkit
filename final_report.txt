@@ -1,0 +1,18 @@
+Mode	: report
+========================================
+System Health Report - 2026-11-13 21:30:46
+========================================
+Hostname: rockylinux.jn9460.com
+Uptime: up 47 minutes
+Disk /: /dev/mapper/rl-root   25G  6.0G   19G  24% /
+Memory used: 2.0Gi/3.5Gi
+Total processes: 362
+Health status: HEALTHY
+========================================
+
+--- End of Report ---
+Script: syshealth.sh (Lab 5 - Error Handling & Professional Reports)
+Generated: 2026-11-13 21:30:46
+Exit status: 0 (HEALTHY)
+Log file: /home/student/.syshealth.log
+========================================
