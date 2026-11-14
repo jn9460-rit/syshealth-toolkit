@@ -9,7 +9,7 @@
 set -euo pipefail
 # Trap for logging on error or unexpected exit
 trap 'log_message "ERROR" "Script exited unexpectedly with code $?"' ERR
-trap 'log_message "INFO" "Script finished normally with code $?"' EX
+trap 'log_message "INFO" "Script finished normally with code $?"' EXIT
 
 # --- Thresholds (global, used by multiple functions) ---
 CPU_THRESHOLD=75
@@ -108,6 +108,18 @@ parse_arguments() {
 	OUTPUT_FILE="${1:-}" # if 1 is given, use it as output file; otherwise empty
 }
 
+log_message() {
+	local level="$1"
+	local message="$2"
+	local log_file="$HOME/.syshealth.log"
+	local timestamp
+	timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+
+	# Ensure log directory exists (in case $HOME is unusual)
+	mkdir -p "$(dirname "$log_file")"
+	echo "$timestamp [$level] $message" >> "$log_file"
+}
+
 generate_report() {
 	# Re-collect metrics (same as before)
 	local CURRENT_DATE HOSTNAME UPTIME DISK_USAGE MEMORY_USAGE PROCESS_COUNT
@@ -129,7 +141,7 @@ generate_report() {
 		"Health status: $([ "${HEALTH_STATUS:-0}" -eq 0 ] && echo "HEALTHY" || echo "UNHEALTHY")"
 	)
 	printf "========================================\n"
-	printf "System Health Report - %s\n" "$CURRENT_DATE
+	printf "System Health Report - %s\n" "$CURRENT_DATE"
 	printf "========================================\n"
 
 	for metric in "${report_metrics[@]}"; do
@@ -140,9 +152,10 @@ generate_report() {
 
 	# Log analysis is already integrated from Lab 4
 	# (keep the LOG ANALYSIS SUMMARY block here)
-	# Professional here-document footer
 
+	# Professional here-document footer
 	cat << EOF
+
 --- End of Report ---
 Script: syshealth.sh (Lab 5 - Error Handling & Professional Reports)
 Generated: $CURRENT_DATE
@@ -151,7 +164,7 @@ Log file: $HOME/.syshealth.log
 ========================================
 EOF
 
-	log_message "INFO" "Report generated successfully (exit code ${HEALTH_STATUS:-0})"
+log_message "INFO" "Report"
 }
 
 analyze_logs() {
@@ -190,18 +203,6 @@ analyze_logs() {
 	printf "  Failed logins : %d\n" "$failed_logins"
 }
 
-log_message() {
-	local level="$1"
-	local message="$2"
-	local log_file="$HOME/.syshealth.log"
-	local timestamp
-	timestamp=$(date '+%Y-%m-%d %H:%M:%S')
-	
-	# Ensure log directory exists (in case $HOME is unusual)
-	mkdir -p "$(dirname "$log_file")"
-	echo "$timestamp [$level] $message" >> "$log_file"
-}
-
 main() {
 	parse_arguments "$@"
 	log_message "INFO" "syshealth.sh started (Lab 5)"
@@ -214,7 +215,9 @@ main() {
 		echo "Report written to $OUTPUT_FILE"
 		log_message "INFO" "Report written to $OUTPUT_FILE"
 	else
-		generate_report
+git commit -m "Rewrite generate_report with here-document footer and add logg
+ing calls"git commit -m "Rewrite generate_report with here-document footer and add logg
+ing calls"		generate_report
 	fi
 	exit "${HEALTH_STATUS:-0}"
 }
