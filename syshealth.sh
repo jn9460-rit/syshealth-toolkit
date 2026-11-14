@@ -186,14 +186,19 @@ log_message() {
 
 main() {
 	parse_arguments "$@"
+	log_message "INFO" "syshealth.sh started (Lab 5)"
 
-	# Run all health checks (prints colored alerts to terminal)
 	run_health_checks
+	generate_report
 
-	# Generate the structured report (to screen or file)
 	if [ -n "$OUTPUT_FILE" ]; then
 		generate_report > "$OUTPUT_FILE"
 		echo "Report written to $OUTPUT_FILE"
+		log_message "INFO" "Report written to $OUTPUT_FILE"
+	else
+		generate_report
+	fi
+	exit "${HEALTH_STATUS:-0}"
 }
 
 # The single call that starts everything - must be the very last line
