@@ -164,7 +164,7 @@ Log file: $HOME/.syshealth.log
 ========================================
 EOF
 
-log_message "INFO" "Report"
+log_message "INFO" "Report generated successfully (exit code ${HEALTH_STATUS:-0})"
 }
 
 analyze_logs() {
